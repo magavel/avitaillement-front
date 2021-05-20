@@ -24,19 +24,26 @@
           <l-icon
             :icon-anchor="staticAnchor"
             class-name="someExtraClass"
+            style="height: 10px"
           >
-            <div class="headline">
-              <h3>{{ station.name }}</h3>
-            </div>
-            <div v-if="station.gasoils">
-              <p >Gasoil:
-                {{ station.gasoils.price }} €
-              </p>
-              <p>
-                {{ station.gasoils.published_at | moment("from", "now") }}
-              </p>
-            </div>
-          <div v-else> Pas de données</div>
+            <router-link
+              :to="{ path: `/station/${station.id}`}">
+
+              <div class="headline">
+                <span class="font-weight-bold">
+                  {{ station.name }}
+                </span>
+              </div>
+              <div v-if="station.gasoils">
+                <span >Gasoil:
+                  {{ station.gasoils.price }} €
+                </span>
+                <span>
+                  {{ station.gasoils.published_at | moment("from", "now") }}
+                </span>
+              </div>
+            <div v-else> Pas de données</div>
+            </router-link>
 
           </l-icon>
         </l-marker>
@@ -61,8 +68,9 @@ export default {
   },
   data() {
     return {
+      positionUser: null,
       stationReportService: null,
-      zoom: 13,
+      zoom: 12,
       center: latLng(43.0841322, 5.8),
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
@@ -79,22 +87,25 @@ export default {
     };
   },
   computed: {
-    dynamicSize() {
-      return [this.iconSize, this.iconSize * 1.15];
-    },
-    dynamicAnchor() {
-      return [this.iconSize / 2, this.iconSize * 1.15];
-    },
-    stations() {
-      return this.$store.state.stations;
-    },
   },
   created() {
+    this.geolalisation();
     Stations.getAllStationsWithLastReport().then((res) => {
       this.stationReportService = res;
     });
   },
   methods: {
+    geolalisation() {
+      navigator.geolocation.getCurrentPosition(this.success, this.error);
+    },
+
+    success(position) {
+      this.positionUser = position.coords;
+      this.center = latLng(position.coords.latitude, position.coords.longitude);
+    },
+    error() {
+      console.log('erreur de loc');
+    },
 
   },
 };
@@ -102,7 +113,7 @@ export default {
 
 <style>
 .someExtraClass {
-  background-color: aqua;
+  background-color: #95d7fd;
   padding: 10px;
   border: 1px solid #333;
   border-radius: 0 20px 20px 20px;
