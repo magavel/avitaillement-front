@@ -1,7 +1,7 @@
 import axios from 'axios';
 import BaseService from '@/services/base.service';
 
-const baseUrl = 'http://localhost:1337';
+const baseUrl = 'https://avitaillement-back.herokuapp.com';
 
 class GasoilService extends BaseService {
   // eslint-disable-next-line class-methods-use-this

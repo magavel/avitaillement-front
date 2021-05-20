@@ -2,7 +2,8 @@ import axios from 'axios';
 import BaseService from '@/services/base.service';
 import Station from '@/models/station';
 
-const baseUrl = 'http://localhost:1337';
+// const baseUrl = 'http://localhost:1337';
+const baseUrl = 'https://avitaillement-back.herokuapp.com';
 
 class StationsService extends BaseService {
   async getAllStations() {
