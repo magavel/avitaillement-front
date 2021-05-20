@@ -1,12 +1,21 @@
 <template>
   <div>
+    <div class="m-3">
+      <b-button @click="dispAddStation">Ajouter une station</b-button>
+      <div v-if="displayAddStation" class="m-3">
+        <NewStation
+          @add-new-station="addStation"
+        />
+      </div>
+    </div>
 
     <b-card
       v-for="station in stations"
       :key="station.id"
       :title=" station.name "
       img-alt="Card image"
-      img-left class="mb-3">
+      img-left
+      class="mb-3 mx-3">
       <b-card-text>
         <p>{{ station.description }}</p>
         <p>{{ station.gasoils.length }} relevés</p>
@@ -25,12 +34,15 @@
 
 <script>
 
+import NewStation from '@/components/NewStation.vue';
 import Stations from '../services/stations.service';
 
 export default {
   name: 'Stations',
+  components: { NewStation },
   data() {
     return {
+      displayAddStation: false,
       stations: null,
     };
   },
@@ -38,6 +50,18 @@ export default {
     Stations.getAllStations().then((res) => {
       this.stations = res;
     });
+  },
+  methods: {
+    dispAddStation() {
+      this.displayAddStation = true;
+    },
+    addStation(station) {
+      console.log(station);
+      Stations.createStation(station).then((res) => {
+        console.log(res);
+      });
+      this.displayAddStation = false;
+    },
   },
 };
 </script>
