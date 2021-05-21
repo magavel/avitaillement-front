@@ -1,5 +1,14 @@
 <template>
   <div>
+    <div v-if="displaySpinner">
+      <p>
+        Téléchargement des stations en cours....
+      </p>
+      <p>
+        Serveur gratuit == temps de latence long
+      </p>
+
+    </div>
     <div class="m-3">
       <b-button @click="dispAddStation">Ajouter une station</b-button>
       <div v-if="displayAddStation" class="m-3">
@@ -42,13 +51,16 @@ export default {
   components: { NewStation },
   data() {
     return {
+      displaySpinner: false,
       displayAddStation: false,
       stations: null,
     };
   },
   created() {
+    this.displaySpinner = true;
     Stations.getAllStations().then((res) => {
       this.stations = res;
+      this.displaySpinner = false;
     });
   },
   methods: {

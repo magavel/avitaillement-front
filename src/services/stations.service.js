@@ -36,6 +36,13 @@ class StationsService extends BaseService {
     });
   }
 
+  async getAllValuesGasoilsByStation(id) {
+    const response = await axios.get(`${baseUrl}/stations/${id}/gasoils`);
+    super.validateResponse(response);
+    console.log(response.data);
+    return response.data;
+  }
+
   async getAllStationsWithLastReport() {
     const response = await axios.get(`${baseUrl}/stations`);
     super.validateResponse(response);

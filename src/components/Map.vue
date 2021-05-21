@@ -5,6 +5,16 @@
     <div style="height: 20%; overflow: auto;">
       <h3>Carte des stations d'avitaillement carburants</h3>
 
+      <div v-if="displaySpinner">
+        <p>
+          Téléchargement des stations en cours....
+        </p>
+        <p>
+          Serveur gratuit == temps de latence long
+        </p>
+
+      </div>
+
     </div>
     <l-map
       :zoom="zoom"
@@ -28,19 +38,18 @@
           >
             <router-link
               :to="{ path: `/station/${station.id}`}">
-
-              <div class="headline">
+<!--              <div class="headline">
                 <span class="font-weight-bold">
                   {{ station.name }}
                 </span>
-              </div>
+              </div>-->
               <div v-if="station.gasoils">
                 <span >Gasoil:
                   {{ station.gasoils.price }} €
                 </span>
-                <span>
+<!--                <span>
                   {{ station.gasoils.published_at | moment("from", "now") }}
-                </span>
+                </span>-->
               </div>
             <div v-else> Pas de données</div>
             </router-link>
@@ -68,6 +77,7 @@ export default {
   },
   data() {
     return {
+      displaySpinner: false,
       positionUser: null,
       stationReportService: null,
       zoom: 12,
@@ -90,8 +100,10 @@ export default {
   },
   created() {
     this.geolalisation();
+    this.displaySpinner = true;
     Stations.getAllStationsWithLastReport().then((res) => {
       this.stationReportService = res;
+      this.displaySpinner = false;
     });
   },
   methods: {
